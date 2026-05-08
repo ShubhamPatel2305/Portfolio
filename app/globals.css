@@ -1,0 +1,92 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+:root {
+  --font-serif: "Instrument Serif", Georgia, serif;
+}
+
+html {
+  scroll-behavior: smooth;
+}
+
+html,
+body {
+  background-color: #fafaf6;
+  color: #0c0c0d;
+  font-feature-settings: "ss01", "cv11";
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+  text-rendering: optimizeLegibility;
+}
+
+::selection {
+  background: #0c0c0d;
+  color: #fafaf6;
+}
+
+@layer base {
+  body {
+    font-family: var(--font-sans);
+  }
+}
+
+@layer utilities {
+  .grid-bg {
+    background-image:
+      radial-gradient(circle at 1px 1px, rgba(12, 12, 13, 0.09) 1px, transparent 0);
+    background-size: 22px 22px;
+    background-position: 0 0;
+  }
+  .fade-mask-b {
+    mask-image: linear-gradient(to bottom, black 0%, black 55%, transparent 100%);
+    -webkit-mask-image: linear-gradient(to bottom, black 0%, black 55%, transparent 100%);
+  }
+  .label-mono {
+    @apply font-mono text-[11px] uppercase tracking-[0.18em] text-ink-muted;
+  }
+  .hairline {
+    border-color: #e6e3da;
+  }
+  .underline-link {
+    background-image: linear-gradient(currentColor, currentColor);
+    background-size: 100% 1px;
+    background-repeat: no-repeat;
+    background-position: 0 100%;
+    transition: background-size 0.25s ease;
+  }
+  .underline-link:hover {
+    background-size: 0% 1px;
+    background-position: 100% 100%;
+  }
+  .marker-amber {
+    background-image: linear-gradient(transparent 60%, rgba(184, 92, 42, 0.18) 60%);
+    padding: 0 0.05em;
+  }
+}
+
+input,
+textarea,
+button,
+select {
+  font: inherit;
+  color: inherit;
+}
+
+input:focus,
+textarea:focus {
+  outline: none;
+}
+
+* {
+  scrollbar-width: thin;
+  scrollbar-color: #d6d3c8 transparent;
+}
+*::-webkit-scrollbar {
+  width: 8px;
+  height: 8px;
+}
+*::-webkit-scrollbar-thumb {
+  background: #d6d3c8;
+  border-radius: 6px;
+}

@@ -2,7 +2,7 @@
 
 import { useState } from "react";
 import { motion, AnimatePresence } from "framer-motion";
-import { Plus, Minus } from "lucide-react";
+import { Plus, Minus, ChevronDown } from "lucide-react";
 import SectionHeader from "./SectionHeader";
 
 type Role = {
@@ -98,11 +98,19 @@ const roles: Role[] = [
 
 export default function Work() {
   const [open, setOpen] = useState<number[]>([0]);
+  const [openDetails, setOpenDetails] = useState<Set<string>>(new Set());
 
   const toggle = (i: number) =>
     setOpen((prev) =>
       prev.includes(i) ? prev.filter((x) => x !== i) : [...prev, i]
     );
+
+  const toggleDetail = (key: string) =>
+    setOpenDetails((prev) => {
+      const next = new Set(prev);
+      next.has(key) ? next.delete(key) : next.add(key);
+      return next;
+    });
 
   return (
     <section className="mx-auto max-w-column px-5 sm:px-6 py-16 sm:py-20">
@@ -157,45 +165,79 @@ export default function Work() {
                       </p>
 
                       <ul className="mt-7 space-y-8">
-                        {role.bullets.map((b, j) => (
-                          <li key={j} className="relative">
-                            <div className="flex items-baseline gap-3">
-                              <span className="font-mono text-[10.5px] text-ink-dim shrink-0">
-                                {String(j + 1).padStart(2, "0")}
-                              </span>
-                              <h4 className="font-serif text-[19px] leading-tight text-ink tracking-tightest">
-                                {b.lead}
-                              </h4>
-                            </div>
-                            <p className="mt-2 ml-7 text-[14.5px] leading-[1.65] text-ink-soft max-w-prose">
-                              {b.body}
-                            </p>
-                            {b.metric && (
-                              <div className="mt-2.5 ml-7 inline-flex items-center gap-2 font-mono text-[11px] text-accent">
-                                <span className="inline-block w-3 h-px bg-accent" />
-                                {b.metric}
-                              </div>
-                            )}
-                            <div className="mt-3 ml-7 pl-3 border-l-2 border-rule">
-                              <div className="font-mono text-[10px] uppercase tracking-[0.18em] text-ink-dim mb-1.5">
-                                why / how
-                              </div>
-                              <p className="text-[13.5px] leading-[1.7] text-ink-muted max-w-prose">
-                                {b.detail}
-                              </p>
-                            </div>
-                            <div className="mt-3 ml-7 flex flex-wrap gap-1.5">
-                              {b.tags.map((t) => (
-                                <span
-                                  key={t}
-                                  className="font-mono text-[10.5px] text-ink-muted border hairline rounded-full px-2 py-0.5"
-                                >
-                                  {t}
+                        {role.bullets.map((b, j) => {
+                          const detailKey = `${i}-${j}`;
+                          const isDetailOpen = openDetails.has(detailKey);
+                          return (
+                            <li key={j} className="relative">
+                              <div className="flex items-baseline gap-3">
+                                <span className="font-mono text-[10.5px] text-ink-dim shrink-0">
+                                  {String(j + 1).padStart(2, "0")}
                                 </span>
-                              ))}
-                            </div>
-                          </li>
-                        ))}
+                                <h4 className="font-serif text-[19px] leading-tight text-ink tracking-tightest">
+                                  {b.lead}
+                                </h4>
+                              </div>
+                              <p className="mt-2 ml-7 text-[14.5px] leading-[1.65] text-ink-soft max-w-prose">
+                                {b.body}
+                              </p>
+                              {b.metric && (
+                                <div className="mt-2.5 ml-7 inline-flex items-center gap-2 font-mono text-[11px] text-accent">
+                                  <span className="inline-block w-3 h-px bg-accent" />
+                                  {b.metric}
+                                </div>
+                              )}
+
+                              {/* Collapsible why / how */}
+                              <div className="mt-3 ml-7 border-l-2 border-rule pl-3">
+                                <button
+                                  onClick={() => toggleDetail(detailKey)}
+                                  aria-expanded={isDetailOpen}
+                                  className="flex items-center gap-2 group/detail cursor-pointer"
+                                >
+                                  <span className="font-mono text-[10px] uppercase tracking-[0.18em] text-ink-dim group-hover/detail:text-ink-muted transition-colors">
+                                    why / how
+                                  </span>
+                                  <motion.span
+                                    animate={{ rotate: isDetailOpen ? 180 : 0 }}
+                                    transition={{ duration: 0.25, ease: "easeInOut" }}
+                                    className="inline-flex text-ink-dim group-hover/detail:text-ink-muted transition-colors"
+                                  >
+                                    <ChevronDown size={11} />
+                                  </motion.span>
+                                </button>
+
+                                <AnimatePresence initial={false}>
+                                  {isDetailOpen && (
+                                    <motion.div
+                                      key="detail"
+                                      initial={{ height: 0, opacity: 0 }}
+                                      animate={{ height: "auto", opacity: 1 }}
+                                      exit={{ height: 0, opacity: 0 }}
+                                      transition={{ duration: 0.3, ease: [0.21, 0.62, 0.34, 1] }}
+                                      className="overflow-hidden"
+                                    >
+                                      <p className="mt-1.5 text-[13.5px] leading-[1.7] text-ink-muted max-w-prose">
+                                        {b.detail}
+                                      </p>
+                                    </motion.div>
+                                  )}
+                                </AnimatePresence>
+                              </div>
+
+                              <div className="mt-3 ml-7 flex flex-wrap gap-1.5">
+                                {b.tags.map((t) => (
+                                  <span
+                                    key={t}
+                                    className="font-mono text-[10.5px] text-ink-muted border hairline rounded-full px-2 py-0.5"
+                                  >
+                                    {t}
+                                  </span>
+                                ))}
+                              </div>
+                            </li>
+                          );
+                        })}
                       </ul>
                     </div>
                   </motion.div>

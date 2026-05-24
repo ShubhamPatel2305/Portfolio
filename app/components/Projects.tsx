@@ -20,6 +20,22 @@ type Project = {
 const projects: Project[] = [
   {
     num: "01",
+    domain: "rag · search",
+    title: "Express Docs RAG",
+    pitch: "Hybrid retrieval + reranking over the official Express.js documentation.",
+    metric: "BM25 + dense fusion · Cohere reranking · Ragas CI gate",
+    body:
+      "A RAG pipeline that combines BM25Okapi (exact-token recall) and dense embeddings (ChromaDB + all-MiniLM-L6-v2, 384-d) fused via min-max-normalized weighted sum behind a single alpha knob. A Cohere cross-encoder reranking stage narrows 20-25 hybrid candidates to the 5 that actually answer the question — the cross-encoder reads query and chunk jointly, catching relevance signals bi-encoders miss. Generation uses Gemini Flash with a grounded system prompt and inline [#N] citations so every claim is traceable back to the source doc.",
+    decision: {
+      label: "key decision",
+      text: "Two-stage retrieval over single-stage — recall and precision pull in opposite directions. The hybrid retriever optimises for recall (cast wide); the cross-encoder reranker optimises for precision (cut noise). Doing both in one pass isn't possible with precomputed vectors alone.",
+    },
+    tags: ["FastAPI", "ChromaDB", "BM25", "Cohere", "Gemini", "Next.js"],
+    repo: "https://github.com/ShubhamPatel2305/Express-Docs-RAG",
+    live: "https://express-docs.rag.shubhampatel.uk/",
+  },
+  {
+    num: "02",
     domain: "agentic-ai · production",
     title: "Agentic NL→SQL Chatbot",
     pitch: "Multi-tenant LangGraph chatbot with locally-served Gemma.",
@@ -35,7 +51,7 @@ const projects: Project[] = [
     live: "https://www.nl2sql.shubhampatel.uk"
   },
   {
-    num: "02",
+    num: "03",
     domain: "infrastructure · multi-cloud",
     title: "Active-Passive Disaster Recovery",
     pitch:
@@ -66,40 +82,8 @@ const projects: Project[] = [
   //   tags: ["FFmpeg", "EC2", "SQS", "Docker", "HLS"],
   //   repo: "https://github.com/ShubhamPatel2305",
   // },
-  // {
-  //   num: "04",
-  //   domain: "performance · caching",
-  //   title: "Hybrid HTTP + Distributed Cache",
-  //   pitch:
-  //     "ETag conditional requests on the edge, Garnet + IMemoryCache underneath.",
-  //   metric: "~70% DB-load drop · ~60% faster responses",
-  //   body:
-  //     "Three layers, each doing one job. Weak ETags at the edge let Angular skip large list payloads on revalidation — the cheapest cache hit is the one that never crosses the network. IMemoryCache short-circuits hot reads inside each app instance. Garnet is the shared L2 across the cluster so cold instances still get warm data. Invalidation is event-driven over a thin pub/sub bus rather than TTL-only, which keeps stale reads bounded after writes.",
-  //   decision: {
-  //     label: "key decision",
-  //     text: "Garnet over Redis — Microsoft's Redis-protocol drop-in posted lower tail latency on our access pattern, with no client-side change.",
-  //   },
-  //   tags: ["ASP.NET", "C#", "Garnet", "ETag", "Angular"],
-  //   repo: "https://github.com/ShubhamPatel2305",
-  // },
-  // {
-  //   num: "05",
-  //   domain: "scrapers · applied-ml",
-  //   title: "Trademark Automation at Scale",
-  //   pitch:
-  //     "Scrape, OCR, and rank trademark conflicts across 200+ jurisdictions.",
-  //   metric: "200+ offices · 250+ regional journals · CV + similarity",
-  //   body:
-  //     "Per-jurisdiction scrapers handle different sessions, JS, IP rate limits, and CAPTCHAs. Conflict ranking blends three signals rather than picking one: RapidFuzz on normalised marks for textual proximity, ResNet feature distance on logo crops for visual similarity, and CLIP for cross-modal matches (text mark vs logo). Scoring is calibrated per jurisdiction because filing standards and similarity tolerances genuinely differ.",
-  //   decision: {
-  //     label: "key decision",
-  //     text: "Per-style CAPTCHA solvers in-house, not a commercial API — at this volume the API spend would have eaten the margin.",
-  //   },
-  //   tags: ["Python", "ResNet", "CLIP", "RapidFuzz", "PDF/OCR"],
-  //   repo: "https://github.com/ShubhamPatel2305",
-  // },
   {
-    num: "03",
+    num: "04",
     domain: "full-stack · led",
     title: "TeamSync — Project Management Platform",
     pitch:
